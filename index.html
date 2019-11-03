@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="./assets/style.css" rel="stylesheet" />
+    <script src="./renderer.js"></script>
+  </head>
+  <body>
+    <header>
+      <div>
+        <button id="scan" onclick="scan(this)">refresh</button>
+        <button id="connect" onclick="connect(this)">connect</button>
+        <select id="ports"></select>
+        <select id="baudrates"></select>
+      </div>
+      <div>
+        <button id="scanMidi" onclick="scanMidi(this)">refresh</button>
+        <button id="connectMidi" onclick="connectMidi(this)">connect</button>
+        <select id="devices"></select>
+      </div>
+    </header>
+    <main></main>
+  </body>
+</html>

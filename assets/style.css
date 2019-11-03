@@ -1,0 +1,126 @@
+:root {
+  --font-family: system-ui, sans-serif;
+}
+
+* {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  outline: none;
+}
+
+html:not(.serial-connected) .view {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+html,
+body {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: white;
+}
+
+input {
+  color: inherit;
+}
+
+label {
+  text-transform: capitalize;
+}
+
+input,
+button {
+  padding: 0.25rem;
+  /* border-radius: 0.25rem; */
+  border: 1px solid #444;
+  box-sizing: border-box;
+}
+
+input {
+  /* margin-left: 0.5rem; */
+  display: inline-block;
+  width: 2.5rem;
+  width: 100%;
+}
+
+button {
+  background-color: #ddd;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+
+/* box */
+
+.view,
+.view > div > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.view > div:last-child {
+  border-left: 1px dotted black;
+}
+
+.view *:not(div) {
+  margin: 0.25rem;
+}
+
+/* header, main */
+
+header > div,
+main > div > div {
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* header */
+
+header {
+}
+
+header > div:last-child {
+}
+
+header > div {
+  border-bottom: 1px solid black;
+  /* background-color: yellow; */
+}
+
+header > div:nth-of-type(1) {
+  /* background-color: tomato; */
+}
+
+header > div:nth-of-type(2) {
+  /* background-color: springgreen; */
+}
+
+/* main */
+
+main {
+  /* display: grid; */
+  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
+}
+
+main > div {
+  border-bottom: 1px solid black;
+}
+
+main > div:nth-of-type(even) {
+  /* background-color: rgb(90, 231, 250); */
+}
+
+main > div:nth-of-type(odd) {
+  /* background-color: rgb(214, 132, 38); */
+}
+
+/* fixes */
+
+::-webkit-scrollbar {
+  display: none;
+}
