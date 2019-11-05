@@ -9,6 +9,7 @@ module.exports = new Store({
       width: 800,
       height: 600
     },
+    mode: "advanced",
     alwaysOnTop: false,
     ios: [
       {

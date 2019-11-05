@@ -23,6 +23,46 @@ var midiOpen = false;
 const ios = [];
 
 var index = 0;
+var mode = config.get("mode");
+
+var keys = [];
+const lookup = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+  "alt",
+  "ctrl",
+  "space",
+  "shift",
+  "enter",
+  "up",
+  "down",
+  "left",
+  "right"
+];
 
 document.addEventListener("DOMContentLoaded", () => {
   main = document.querySelector("main");
@@ -112,49 +152,68 @@ function connectMidi(el) {
 parser.on("data", str => {
   // remove whitespace
   str = str.trim();
+  if (str.length <= 1) return;
 
-  // for each io
-  for (const io of ios) {
-    // get pin
-    var pin = io.pins.value;
-    if (str.includes(pin)) {
-      // remove pin and get value
-      var val = str.replace(pin, "");
-      // get number from string
-      val = parseInt(val);
-
-      // update io with new value
-      io.update(val);
-
-      // send key press
-      if (io.keySend.checked) {
-        // if output is more than key press threshold
-        if (io.output.value >= io.keyThreshold.value) {
-          // and if key is not pressed
-          if (io.keyPressed === false) {
-            robot.keyToggle(io.keys.value, "down");
-            robot.keyToggle(io.keys.value, "up");
-            io.keyPressed = true;
-          }
-        } else {
-          if (io.keyPressed === true) {
-            io.keyPressed = false;
+  if (mode === "advanced") {
+    // for each io
+    for (const io of ios) {
+      // get pin
+      var pin = io.pins.value;
+      if (str.includes(pin)) {
+        // remove pin and get value
+        var val = str.replace(pin, "");
+        // get number from string
+        val = parseInt(val);
+        // update io with new value
+        io.update(val);
+        // send key press
+        if (io.keySend.checked) {
+          // if output is more than key press threshold
+          if (io.output.value >= io.keyThreshold.value) {
+            // and if key is not pressed
+            if (io.keyPressed === false) {
+              pressKey(io.keys.value);
+              io.keyPressed = true;
+            }
+          } else {
+            if (io.keyPressed === true) {
+              io.keyPressed = false;
+            }
           }
         }
+        // send midi key
+        if (io.midiSend.checked) {
+          output.sendMessage([1, Number(io.output.value), io.id]);
+        }
       }
-
-      // send midi key
-      if (io.midiSend.checked) {
-        output.sendMessage([1, Number(io.output.value), io.id]);
+    }
+  } else {
+    var key = str.substr(1);
+    var first = str[0];
+    var index = lookup.indexOf(key);
+    if (index > 0) {
+      if (first === "$") {
+        if (!keys.includes(key)) {
+          pressKey(key);
+          keys.push(key);
+          output.sendMessage([1, 127, index]);
+        }
+      } else if (first === "!") {
+        keys = keys.filter(k => k !== key);
+        output.sendMessage([1, 0, index]);
       }
     }
   }
 });
 
 function pressKey(key) {
-  // console.log(`key: ${key}`);
+  console.log(`Key: ${key}`);
   robot.keyToggle(key, "down");
   robot.keyToggle(key, "up");
+}
+
+function arrayContains(needle, arrhaystack) {
+  return arrhaystack.indexOf(needle) > -1;
 }
 
 function isArduino(port) {

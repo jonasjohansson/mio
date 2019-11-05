@@ -1,7 +1,7 @@
 {
   "name": "Mio",
   "productName": "Mio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Minimal input output for serial communication to keyboard and MIDI",
   "license": "MIT",
   "author": {
