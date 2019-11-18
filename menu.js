@@ -43,14 +43,14 @@ const appMenu = [
       sendAction("save");
     }
   },
-  {
-    label: "Advanced Mode",
-    type: "checkbox",
-    checked: config.get("advancedMode"),
-    click() {
-      config.set("advancedMode", !config.get("advancedMode"));
-    }
-  },
+  // {
+  //   label: "Advanced Mode",
+  //   type: "checkbox",
+  //   checked: config.get("advancedMode"),
+  //   click() {
+  //     config.set("advancedMode", !config.get("advancedMode"));
+  //   }
+  // },
   { type: "separator" },
   { role: "hide" },
   { role: "hideothers" },

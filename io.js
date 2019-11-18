@@ -20,6 +20,7 @@ class IO extends EventEmitter {
     this.output = el("input", "number", "out", div);
     this.id = data.index;
     this.input.disabled = true;
+    this.input.setAttribute("data-value", 0);
     this.output.disabled = true;
 
     for (var input of [this.input, this.inMin, this.inMax]) {
@@ -55,16 +56,9 @@ class IO extends EventEmitter {
   }
 
   update(val) {
-    // var oldVal = Number(this.input.val);
-    // if (oldVal !== val) {
-    //   for (var i = 0; i < 10; i++) {
-    //     var n = i / 10;
-    //     oldVal = smoothstep(oldVal, val, i);
-    //   }
-    // }
-    var a = Math.ceil(this.input.value);
+    var a = Number(this.input.getAttribute("data-temp")) || 0;
+
     var b = lerp(a, val, this.smooth.value);
-    b = Math.round(b);
 
     var mapped = b.map(
       this.inMin.value,
@@ -73,10 +67,9 @@ class IO extends EventEmitter {
       this.outMax
     );
 
-    mapped = Math.round(mapped);
-
-    this.input.value = b;
-    this.output.value = mapped;
+    this.input.setAttribute("data-temp", b);
+    this.input.value = val;
+    this.output.value = Math.round(mapped);
   }
 
   setPins() {
