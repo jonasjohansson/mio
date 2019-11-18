@@ -1,24 +1,24 @@
 {
-  "name": "Mio",
-  "productName": "Mio",
-  "version": "1.0.1",
-  "description": "Minimal input output for serial communication to keyboard and MIDI",
-  "license": "MIT",
-  "author": {
-    "name": "Jonas Johansson",
-    "email": "jns.johansson@gmail.com",
-    "url": "jonasjohansson.se"
-  },
-  "main": "main.js",
-  "dependencies": {
-    "electron-about-window": "^1.13.1",
-    "electron-store": "^5.0.0",
-    "event-emitter-es6": "^1.1.5",
-    "midi": "^1.0.0",
-    "robotjs": "^0.5.1",
-    "serialport": "^7.1.5"
-  },
-  "devDependencies": {
-    "electron": "4.2.12"
-  }
+	"name": "Mio",
+	"productName": "Mio",
+	"version": "1.0.3",
+	"description": "Minimal input output for serial communication to keyboard and MIDI",
+	"license": "MIT",
+	"author": {
+		"name": "Jonas Johansson",
+		"email": "jns.johansson@gmail.com",
+		"url": "jonasjohansson.se"
+	},
+	"main": "main.js",
+	"dependencies": {
+		"electron-about-window": "^1.13.1",
+		"electron-store": "^5.0.0",
+		"event-emitter-es6": "^1.1.5",
+		"midi": "^1.0.0",
+		"robotjs": "^0.5.1",
+		"serialport": "^7.1.5"
+	},
+	"devDependencies": {
+		"electron": "4.2.12"
+	}
 }

@@ -14,17 +14,13 @@ app.on("ready", () => {
   createWindow();
 });
 
-app.on("window-all-closed", () => {
-  app.quit();
-});
-
 app.on("activate", () => {
   win.show();
 });
 
 app.on("before-quit", () => {
   isQuitting = true;
-  config.set("lastWindowState", win.getBounds());
+  // config.set("lastWindowState", win.getBounds());
 });
 
 function createWindow() {
@@ -36,8 +32,9 @@ function createWindow() {
     y: lastWindowState.y,
     width: lastWindowState.width,
     height: lastWindowState.height,
-    minWidth: 400,
-    minHeight: 200,
+    minWidth: 300,
+    minHeight: 300,
+    maxWidth: 500,
     // titleBarStyle: 'hiddenInset',
     // frame: false,
     alwaysOnTop: config.get("alwaysOnTop"),
@@ -49,6 +46,7 @@ function createWindow() {
   win.loadURL(`file://${__dirname}/index.html`);
 
   win.on("close", event => {
+    config.set("lastWindowState", win.getBounds());
     if (!isQuitting) {
       event.preventDefault();
       app.hide();
