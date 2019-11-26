@@ -15,13 +15,14 @@
         <select id="ports"></select>
         <select id="baudrates"></select>
       </div>
-      <div>
+      <div style="display:none;">
         <button id="scanMidi" onclick="scanMidi(this)">refresh</button>
         <button id="connectMidi" onclick="connectMidi(this)">connect</button>
+        <button id="test" onclick="testMidi()">test</button>
         <select id="devices"></select>
       </div>
     </header>
-    <!-- <button id="add" onclick="createIO({})">+</button> -->
     <main></main>
+    <button id="add" onclick="createIO({})">+</button>
   </body>
 </html>

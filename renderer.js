@@ -27,6 +27,8 @@ var index = 0;
 var keysPressed = [];
 const keysAllowed = config.get("keys");
 
+// robot.setKeyboardDelay(10);
+
 document.addEventListener("DOMContentLoaded", () => {
   main = document.querySelector("main");
   aside = document.querySelector("aside");
@@ -61,11 +63,14 @@ function createIO(data) {
 function scan() {
   removeAllChildren(portSelect);
   SerialPort.list(function(err, ports) {
-    ports = ports.filter(isArduino);
+    // ports = ports.filter(isArduino);
     // connectBtn.disabled != ports.length;
     for (var port of ports) {
       var option = document.createElement("option");
       option.textContent = port.comName;
+      if (port.comName.includes("usbmodem")) {
+        option.selected = true;
+      }
       portSelect.appendChild(option);
     }
   });
@@ -108,10 +113,16 @@ function connectMidi(el) {
   } else {
     midiOpen = true;
     output.openPort(devicesSelect.selectedIndex);
-    console.log(devicesSelect.selectedIndex);
     el.textContent = "disconnect";
   }
 }
+
+function testMidi() {
+  var val = Math.round(Math.random() * 127);
+  var msg = [176, 0, val];
+  output.sendMessage(msg);
+}
+
 parser.on("data", str => {
   // remove whitespace
   str = str.trim();
@@ -136,28 +147,43 @@ function sendAdvanced(str) {
       val = parseInt(val);
       // update io with new value
       io.update(val);
+
       // send key press
       if (io.keySend.checked) {
-        // if output is more than key press threshold
-        if (io.output.value >= io.keyThreshold.value) {
-          // and if key is not pressed
-          if (io.keyPressed === false) {
-            pressKey(io.keys.value);
+        var mod = io.keysMod.options[io.keysMod.selectedIndex].value;
+        // if output is more than 0
+        if (Number(io.output.value) > 0) {
+          if (io.keyLong.checked) {
+            robot.keyToggle(io.keys.value, "down", mod);
             io.keyPressed = true;
+          } else {
+            if (io.keyPressed === false) {
+              io.keyPressed = true;
+              pressKey(io.keys.value, mod);
+            }
           }
         } else {
           if (io.keyPressed === true) {
             io.keyPressed = false;
+            if (io.keyLong.checked) {
+              robot.keyToggle(io.keys.value, "up", mod);
+            }
           }
         }
       }
+
       // send midi key
-      if (io.midiSend.checked) {
-        output.sendMessage([1, Number(io.output.value), io.midiCC]);
+      if (io.midiSend.checked && val !== io.prev) {
+        var val = Number(io.output.value);
+        var msg = [io.midiCntrol.value, io.midiChannel.value, val];
+        output.sendMessage(msg);
+        console.log(`Midi: ${msg}`);
+        io.prev = val;
       }
     }
   }
 }
+
 function sendSimple(str) {
   var key = str.substr(1);
   var first = str[0];
@@ -167,16 +193,16 @@ function sendSimple(str) {
       if (!keysPressed.includes(key)) {
         pressKey(key);
         keysPressed.push(key);
-        output.sendMessage([1, 127, index]);
+        output.sendMessage([176, index, 127]);
       }
     } else if (first === "!") {
       keysPressed = keysPressed.filter(k => k !== key);
-      output.sendMessage([1, 0, index]);
+      output.sendMessage([176, index, 0]);
     }
   }
 }
 
-function pressKey(key) {
+function pressKey(key, mod = none) {
   console.log(`Key: ${key}`);
   robot.keyToggle(key, "down");
   robot.keyToggle(key, "up");
@@ -206,11 +232,11 @@ ipcRenderer.on("save", () => {
       inMax: Number(io.inMax.value),
       outMin: io.outMin,
       outMax: io.outMax,
-      threshold: Number(io.keyThreshold.value),
+      // threshold: Number(io.keyThreshold.value),
       key: io.keys.value,
       keySend: io.keySend.checked,
       midiSend: io.midiSend.checked,
-      midiCC: Number(io.midiCC.value)
+      midiChannel: Number(io.midiChannel.value)
     });
   }
   config.set("ios", ioData);

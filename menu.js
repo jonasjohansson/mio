@@ -37,20 +37,20 @@ const appMenu = [
     }
   },
   {
+    label: "Advanced Mode",
+    type: "checkbox",
+    checked: config.get("advancedMode"),
+    click() {
+      config.set("advancedMode", !config.get("advancedMode"));
+    }
+  },
+  {
     label: "Save",
     accelerator: "Cmd+s",
     click() {
       sendAction("save");
     }
   },
-  // {
-  //   label: "Advanced Mode",
-  //   type: "checkbox",
-  //   checked: config.get("advancedMode"),
-  //   click() {
-  //     config.set("advancedMode", !config.get("advancedMode"));
-  //   }
-  // },
   { type: "separator" },
   { role: "hide" },
   { role: "hideothers" },

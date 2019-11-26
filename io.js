@@ -12,7 +12,8 @@ class IO extends EventEmitter {
 
     // serial
     var div = elDiv(this.view);
-    this.pins = el("select", null, "pin", div);
+    // this.pins = el("select", null, "pin", div);
+    this.pins = el("input", "text", "pin", div);
     this.input = el("input", "number", "in", div);
     this.inMin = el("input", "number", "min", div);
     this.inMax = el("input", "number", "max", div);
@@ -23,6 +24,10 @@ class IO extends EventEmitter {
     this.input.setAttribute("data-value", 0);
     this.output.disabled = true;
 
+    this.smooth.parentNode.style.display = "none";
+    this.inMin.parentNode.style.display = "none";
+    this.inMax.parentNode.style.display = "none";
+
     for (var input of [this.input, this.inMin, this.inMax]) {
       input.addEventListener("change", e => {
         this.update();
@@ -32,27 +37,35 @@ class IO extends EventEmitter {
     // keys
     var div = elDiv(this.view);
     this.keys = el("select", null, "key", div);
-    this.keyThreshold = el("input", "number", "threshold", div, 1);
+    this.keysMod = el("select", null, "mod", div);
     this.keySend = el("input", "checkbox", "send key", div);
+    this.keyLong = el("input", "checkbox", "long press", div);
     this.keyPressed = false;
 
     // midi
     this.midiSend = el("input", "checkbox", "send midi", div);
-    this.midiCC = el("input", "number", "cc", div);
+    this.midiControl = el("input", "number", "midi control", div);
+    this.midiChannel = el("input", "number", "midi channel", div);
+
+    this.midiSend.parentNode.style.display = "none";
+    this.midiControl.parentNode.style.display = "none";
+    this.midiChannel.parentNode.style.display = "none";
 
     this.setPins();
     this.setKeys();
+    this.setMods();
 
     this.pins.value = data.pin;
     this.inMin.value = data.inMin || 0;
     this.inMax.value = data.inMax || 1023;
     this.outMin = data.outMin || 0;
     this.outMax = data.outMax || 127;
-    this.keys.value = data.key || "-";
-    this.keyThreshold.value = data.keyThreshold || 1;
+    this.keys.value = data.key || "a";
     this.keySend.checked = data.keySend || false;
+    this.keyLong.checked = data.keyLong || false;
     this.midiSend.checked = data.midiSend || false;
-    this.midiCC.value = data.midiCC || 1;
+    this.midiControl.value = data.midiControl || 172;
+    this.midiChannel.value = data.midiChannel || 1;
   }
 
   update(val) {
@@ -66,6 +79,8 @@ class IO extends EventEmitter {
       this.outMin,
       this.outMax
     );
+
+    mapped = Math.ceil(mapped);
 
     this.input.setAttribute("data-temp", b);
     this.input.value = val;
@@ -87,6 +102,15 @@ class IO extends EventEmitter {
       option.value = key;
       option.textContent = key;
       this.keys.appendChild(option);
+    }
+  }
+
+  setMods() {
+    for (const mod of config.get("mods")) {
+      let option = document.createElement("option");
+      option.value = mod;
+      option.textContent = mod;
+      this.keysMod.appendChild(option);
     }
   }
 

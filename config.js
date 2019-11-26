@@ -9,51 +9,45 @@ module.exports = new Store({
       width: 800,
       height: 600
     },
-    advancedMode: false,
+    advancedMode: true,
     alwaysOnTop: false,
     ios: [
       {
-        pin: "d3",
+        pin: "a0",
         inMin: 0,
-        inMax: 1,
+        inMax: 1023,
         outMin: 0,
         outMax: 127,
-        threshold: 64
+        keyThreshold: 64
       },
       {
-        pin: "d4",
+        pin: "a1",
         inMin: 0,
-        inMax: 1,
+        inMax: 1023,
         outMin: 0,
         outMax: 127,
-        threshold: 64
+        keyThreshold: 64
+      },
+      {
+        pin: "d2",
+        inMin: 0,
+        inMax: 1023,
+        outMin: 0,
+        outMax: 127,
+        keyThreshold: 64
+      },
+      {
+        pin: "d3",
+        inMin: 0,
+        inMax: 1023,
+        outMin: 0,
+        outMax: 127,
+        keyThreshold: 64
       }
-    ],
-    pins: [
-      "-",
-      "a0",
-      "a1",
-      "a2",
-      "a3",
-      "a4",
-      "a5",
-      "d0",
-      "d1",
-      "d2",
-      "d3",
-      "d4",
-      "d5",
-      "d6",
-      "d7",
-      "d8",
-      "d9",
-      "d10",
-      "d11",
-      "d12",
-      "d13"
     ],
     baudrates: [9600, 115200],
     keys: [
+      "none",
       "a",
       "b",
       "c",
@@ -90,6 +84,7 @@ module.exports = new Store({
       "down",
       "left",
       "right"
-    ]
+    ],
+    mods: ["none", "alt", "command", "control", "shift"]
   }
 });
