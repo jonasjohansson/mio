@@ -20,5 +20,8 @@
   },
   "devDependencies": {
     "electron": "4.2.12"
+  },
+  "scripts": {
+    "dist": "node build.js -mw"
   }
 }
