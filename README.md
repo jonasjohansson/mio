@@ -1,4 +1,4 @@
-# Homie
+# Mio
 
 Mio simplifies serial communication as a trigger for key presses and MIDI communication. It relies on specific commands (eg. a0 87) being sent by a device (eg. Arduino). The command will be parsed, leaving only the integer.
 
