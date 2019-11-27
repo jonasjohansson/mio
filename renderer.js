@@ -128,11 +128,8 @@ parser.on("data", str => {
   str = str.trim();
   if (str.length <= 1) return;
 
-  if (config.get("advancedMode")) {
-    sendAdvanced(str);
-  } else {
-    sendSimple(str);
-  }
+  sendSimple(str);
+  sendAdvanced(str);
 });
 
 function sendAdvanced(str) {
@@ -185,24 +182,39 @@ function sendAdvanced(str) {
 }
 
 function sendSimple(str) {
-  var key = str.substr(1);
+  var count = (str.match(/(\$)|(\!)+/g) || []).length;
+  var key = str.substr(count);
   var first = str[0];
   var index = keysAllowed.indexOf(key);
   if (index > 0) {
     if (first === "$") {
-      if (!keysPressed.includes(key)) {
-        pressKey(key);
-        keysPressed.push(key);
-        output.sendMessage([176, index, 127]);
+      if (count === 1) {
+        if (!keysPressed.includes(key)) {
+          pressKey(key);
+          keysPressed.push(key);
+        }
+      } else {
+        robot.keyToggle(key, "down");
+        if (!keysPressed.includes(key)) {
+          keysPressed.push(key);
+        }
       }
+      // output.sendMessage([176, index, 127]);
     } else if (first === "!") {
-      keysPressed = keysPressed.filter(k => k !== key);
-      output.sendMessage([176, index, 0]);
+      if (count === 1) {
+        keysPressed = keysPressed.filter(k => k !== key);
+      } else {
+        if (keysPressed.includes(key)) {
+          robot.keyToggle(key, "up");
+        }
+        keysPressed = keysPressed.filter(k => k !== key);
+      }
+      // output.sendMessage([176, index, 0]);
     }
   }
 }
 
-function pressKey(key, mod = none) {
+function pressKey(key) {
   console.log(`Key: ${key}`);
   robot.keyToggle(key, "down");
   robot.keyToggle(key, "up");

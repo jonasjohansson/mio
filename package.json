@@ -19,7 +19,8 @@
     "serialport": "^7.1.5"
   },
   "devDependencies": {
-    "electron": "4.2.12"
+    "electron": "4.2.12",
+    "electron-builder": "^21.2.0"
   },
   "scripts": {
     "dist": "node build.js -mw"
