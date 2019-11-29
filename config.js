@@ -12,41 +12,60 @@ module.exports = new Store({
     alwaysOnTop: false,
     ios: [
       {
-        pin: "a0",
-        inMin: 0,
-        inMax: 1023,
-        outMin: 0,
-        outMax: 127,
-        keyThreshold: 64
+        id: "a0",
+        key: "a",
+        keySend: false,
+        keyLong: false,
+        keyMod: "none"
       },
       {
-        pin: "a1",
-        inMin: 0,
-        inMax: 1023,
-        outMin: 0,
-        outMax: 127,
-        keyThreshold: 64
+        id: "a1",
+        key: "a",
+        keySend: false,
+        keyLong: false,
+        keyMod: "none"
       },
       {
-        pin: "d2",
-        inMin: 0,
-        inMax: 1023,
-        outMin: 0,
-        outMax: 127,
-        keyThreshold: 64
+        id: "d2",
+        key: "a",
+        keySend: false,
+        keyLong: false,
+        keyMod: "none"
       },
       {
-        pin: "d3",
-        inMin: 0,
-        inMax: 1023,
-        outMin: 0,
-        outMax: 127,
-        keyThreshold: 64
+        id: "d3",
+        key: "a",
+        keySend: false,
+        keyLong: false,
+        keyMod: "none"
+      },
+      {
+        id: "d4",
+        key: "a",
+        keySend: false,
+        keyLong: false,
+        keyMod: "none"
+      },
+      {
+        id: "d5",
+        key: "a",
+        keySend: false,
+        keyLong: false,
+        keyMod: "none"
       }
     ],
     baudrates: [9600, 115200],
     keys: [
-      "none",
+      "alt",
+      "ctrl",
+      "space",
+      "shift",
+      "enter",
+      "space",
+      "up",
+      "down",
+      "left",
+      "right",
       "a",
       "b",
       "c",
@@ -72,17 +91,7 @@ module.exports = new Store({
       "w",
       "x",
       "y",
-      "z",
-      "alt",
-      "ctrl",
-      "space",
-      "shift",
-      "enter",
-      "space",
-      "up",
-      "down",
-      "left",
-      "right"
+      "z"
     ],
     mods: ["none", "alt", "command", "control", "shift"]
   }

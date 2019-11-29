@@ -20,7 +20,7 @@ app.on("activate", () => {
 
 app.on("before-quit", () => {
   isQuitting = true;
-  // config.set("lastWindowState", win.getBounds());
+  config.set("lastWindowState", win.getBounds());
 });
 
 function createWindow() {
@@ -32,9 +32,9 @@ function createWindow() {
     y: lastWindowState.y,
     width: lastWindowState.width,
     height: lastWindowState.height,
-    // minWidth: 300,
-    // minHeight: 300,
-    // maxWidth: 500,
+    minWidth: 500,
+    minHeight: 900,
+    maxWidth: 500,
     // titleBarStyle: 'hiddenInset',
     // frame: false,
     alwaysOnTop: config.get("alwaysOnTop"),

@@ -10,7 +10,7 @@
 }
 
 html:not(.serial-connected) .view {
-  opacity: 0.5;
+  /* opacity: 0.5; */
   /* pointer-events: none; */
 }
 
@@ -22,13 +22,20 @@ body {
   font-size: 12px;
 }
 
-html.serial-connected header {
+html.serial-connected header > div:first-child,
+html.midi-connected header > div:last-child {
   background-color: rgba(0, 255, 0, 1);
+}
+
+html:not(.serial-connected) header > div:first-child,
+html:not(.midi-connected) header > div:last-child {
+  background-color: rgba(255, 0, 0, 1);
 }
 
 body {
   font-family: var(--font-family);
   background-color: white;
+  overflow: hidden;
 }
 
 input {
@@ -63,14 +70,24 @@ button {
 
 /* box */
 
-.view,
-.view > div > div {
+.view {
+  outline: 1px solid black;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+.view:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.view div div {
+  /* display: grid; */
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
 .view > div:last-child {
-  border-left: 1px dotted black;
+  /* border-left: 1px dotted black; */
 }
 
 .view *:not(div) {
@@ -79,8 +96,7 @@ button {
 
 /* header, main */
 
-header > div,
-main > div > div {
+header > div {
   padding: 1rem;
   box-sizing: border-box;
 }
@@ -109,12 +125,12 @@ header > div:nth-of-type(2) {
 /* main */
 
 main {
-  /* display: grid; */
-  /* grid-template-columns: 1fr 1fr 1fr 1fr; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 main > div {
-  border-bottom: 1px solid black;
+  /* border-bottom: 1px solid black; */
 }
 
 main > div:nth-of-type(even) {
@@ -123,6 +139,13 @@ main > div:nth-of-type(even) {
 
 main > div:nth-of-type(odd) {
   /* background-color: rgb(214, 132, 38); */
+}
+
+/* footer */
+
+footer {
+  height: 100px;
+  overflow: scroll;
 }
 
 /* buttons */
