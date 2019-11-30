@@ -10,50 +10,6 @@ module.exports = new Store({
       height: 600
     },
     alwaysOnTop: false,
-    ios: [
-      {
-        id: "a0",
-        key: "a",
-        keySend: false,
-        keyLong: false,
-        keyMod: "none"
-      },
-      {
-        id: "a1",
-        key: "a",
-        keySend: false,
-        keyLong: false,
-        keyMod: "none"
-      },
-      {
-        id: "d2",
-        key: "a",
-        keySend: false,
-        keyLong: false,
-        keyMod: "none"
-      },
-      {
-        id: "d3",
-        key: "a",
-        keySend: false,
-        keyLong: false,
-        keyMod: "none"
-      },
-      {
-        id: "d4",
-        key: "a",
-        keySend: false,
-        keyLong: false,
-        keyMod: "none"
-      },
-      {
-        id: "d5",
-        key: "a",
-        keySend: false,
-        keyLong: false,
-        keyMod: "none"
-      }
-    ],
     baudrates: [9600, 115200],
     keys: [
       "alt",

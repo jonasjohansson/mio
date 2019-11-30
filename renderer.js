@@ -5,39 +5,24 @@ const SerialPort = require("serialport");
 const Readline = require("@serialport/parser-readline");
 const midi = require("midi");
 const robot = require("robotjs");
-const IO = require("./io");
 const config = require("./config");
 
 const output = new midi.Output();
 const parser = new Readline();
+const keysAllowed = config.get("keys");
 
-var port;
-let main;
-let aside;
-let footer;
+let port;
+
+var keysPressed = [];
+var keysIncoming = [];
 
 let connectBtn, portSelect, baudSelect, devicesSelect;
 
 var portOpen = false;
 var midiOpen = false;
 
-const ios = [];
-
-var index = 0;
-
-var keysPressed = [];
-var keysIncoming = [];
-var keysHold = [];
-const keysAllowed = config.get("keys");
-
-// robot.setKeyboardDelay(10);
-
 document.addEventListener("DOMContentLoaded", () => {
-  main = document.querySelector("main");
-  aside = document.querySelector("aside");
-  footer = document.querySelector("footer");
   connectBtn = document.querySelector("#connect");
-  // connectBtn.disabled = true;
   portSelect = document.querySelector("#ports");
   baudSelect = document.querySelector("#baudrates");
   devicesSelect = document.querySelector("#devices");
@@ -49,26 +34,15 @@ document.addEventListener("DOMContentLoaded", () => {
     baudSelect.appendChild(option);
   }
 
-  for (const ioData of config.get("ios")) {
-    ioData.index = ++index;
-    createIO(ioData);
-  }
-
   scan();
   scanMidi();
 });
 
-function createIO(data) {
-  var io = new IO(data);
-  ios.push(io);
-  main.appendChild(io.view);
-}
-
 function scan() {
   removeAllChildren(portSelect);
   SerialPort.list(function(err, ports) {
-    // ports = ports.filter(isArduino);
-    // connectBtn.disabled != ports.length;
+    ports = ports.filter(isArduino);
+    connectBtn.disabled != ports.length;
     for (var port of ports) {
       var option = document.createElement("option");
       option.textContent = port.comName;
@@ -91,21 +65,31 @@ function scanMidi() {
 }
 
 function connect(el) {
-  if (portOpen === true) {
-    port.close();
-    portOpen = false;
-    el.textContent = "connect";
-    document.documentElement.classList.remove("serial-connected");
-  } else if (portSelect.value) {
+  if (portOpen === false) {
     port = new SerialPort(portSelect.value, {
       baudRate: Number(baudSelect.value),
       autoOpen: true,
       lock: false
     });
+    port.on("open", function() {
+      document.documentElement.classList.add("serial-connected");
+      el.textContent = "disconnect";
+      portOpen = true;
+    });
+    port.on("close", function() {
+      document.documentElement.classList.remove("serial-connected");
+      el.textContent = "connect";
+      portOpen = false;
+      // setTimeout(function() {
+      //   scan();
+      // }, 100);
+    });
+    port.on("error", err => {
+      alert(err);
+    });
     port.pipe(parser);
-    portOpen = true;
-    document.documentElement.classList.add("serial-connected");
-    el.textContent = "disconnect";
+  } else {
+    port.close();
   }
 }
 
@@ -120,98 +104,35 @@ function connectMidi(el) {
     output.openPort(devicesSelect.selectedIndex);
     document.documentElement.classList.add("midi-connected");
     el.textContent = "disconnect";
+    output.sendMessage([176, 44, 127]);
+    output.sendMessage([16, 1, 0]);
   }
-}
-
-function testMidi() {
-  var val = Math.round(Math.random() * 127);
-  var msg = [176, 0, val];
-  output.sendMessage(msg);
 }
 
 parser.on("data", str => {
-  // remove whitespace
   str = str.trim();
-  if (str.length <= 1) return;
+  // return if string is too short or does not contain special symbol
+  if (str.length < 2 || str[0] !== "$") return;
 
-  sendSimple(str);
-  sendAdvanced(str);
+  var key = str.substr(1);
+  var keyIndex = getIndex(key);
+
+  if (keyIndex < 0) return;
+
+  if (!keysPressed.includes(key)) {
+    keysPressed.push(key);
+    robot.keyToggle(key, "down");
+    output.sendMessage([16, 127, keyIndex]);
+  }
+  if (!keysIncoming.includes(key)) {
+    keysIncoming.push(key);
+  }
 });
-
-function sendSimple(str) {
-  if (str[0] !== "$") return;
-
-  var count = (str.match(/(\$)|(\!)+/g) || []).length;
-  var key = str.substr(count);
-  var index = getIndex(key);
-  if (index > 0) {
-    if (!keysHold.includes(key)) {
-      log(`HOLD: ${key}`);
-      keysHold.push(key);
-      robot.keyToggle(key, "down");
-      log(`MIDI ON: ${index}`);
-      output.sendMessage([16, 127, index]);
-    }
-    if (!keysIncoming.includes(key)) {
-      keysIncoming.push(key);
-    }
-  }
-}
-
-function sendAdvanced(str) {
-  // for each io
-  for (const io of ios) {
-    // get id
-    var id = io.ids.value;
-    if (str.includes(id)) {
-      // remove id and get value
-      var val = str.replace(id, "");
-      // get number from string
-      val = parseInt(val);
-      // update io with new value
-      io.update(val);
-
-      // send key press
-      if (io.keySend.checked) {
-        var mod = io.keysMod.options[io.keysMod.selectedIndex].value;
-        // if output is more than 0
-        if (Number(io.output.value) > 0) {
-          if (io.keyHold.checked) {
-            robot.keyToggle(io.keys.value, "down", mod);
-            io.keyPressed = true;
-          } else {
-            if (io.keyPressed === false) {
-              io.keyPressed = true;
-              pressKey(io.keys.value, mod);
-            }
-          }
-        } else {
-          if (io.keyPressed === true) {
-            io.keyPressed = false;
-            if (io.keyHold.checked) {
-              robot.keyToggle(io.keys.value, "up", mod);
-            }
-          }
-        }
-      }
-
-      // send midi key
-      if (io.midiSend.checked && val !== io.prev) {
-        var val = Number(io.output.value);
-        var msg = [io.midiControl.value, io.midiChannel.value, val];
-        output.sendMessage(msg);
-        console.log(`Midi: ${msg}`);
-        io.prev = val;
-      }
-    }
-  }
-}
 
 function pressKey(key, index = 0) {
   robot.keyToggle(key, "down");
   setTimeout(() => {
     robot.keyToggle(key, "up");
-    output.sendMessage([176, 1, 0]);
   }, 100);
 }
 
@@ -219,9 +140,14 @@ function arrayContains(needle, arrhaystack) {
   return arrhaystack.indexOf(needle) > -1;
 }
 
+function getIndex(key) {
+  return keysAllowed.indexOf(key);
+}
+
 function isArduino(port) {
-  var pm = port["manufacturer"];
-  return pm !== undefined && pm.includes("arduino");
+  var p = port["vendorId"];
+  return p !== undefined && p.includes("2341");
+  // return pm !== undefined && port.comName.includes("usbmodem");
 }
 
 function removeAllChildren(node) {
@@ -230,31 +156,11 @@ function removeAllChildren(node) {
   }
 }
 
-function getIndex(key) {
-  return keysAllowed.indexOf(key);
+function log(msg, type = "") {
+  var log = document.getElementById("log");
+  log.innerHTML = msg;
+  log.className = type;
 }
-
-function log(str) {
-  var line = document.createElement("p");
-  line.textContent = str;
-  footer.insertBefore(line, footer.firstChild);
-}
-
-ipcRenderer.on("save", () => {
-  var ioData = [];
-  for (var io of ios) {
-    ioData.push({
-      id: io.ids.value,
-      key: io.keys.value,
-      keySend: io.keySend.checked,
-      keyHold: io.keySend.checked,
-      keyMod: io.keyMod.value
-      // midiSend: io.midiSend.checked,
-      // midiChannel: Number(io.midiChannel.value)
-    });
-  }
-  config.set("ios", ioData);
-});
 
 var fps = 30;
 var now;
@@ -268,24 +174,24 @@ function loop() {
   delta = now - then;
 
   if (delta > interval) {
-    for (var i = 0; i < keysHold.length; i++) {
-      var key = keysHold[i];
+    for (var i = 0; i < keysPressed.length; i++) {
+      var key = keysPressed[i];
 
       // if the key is not incoming any more, it must have been released
       if (!keysIncoming.includes(key)) {
-        // the key is released
-        keysHold = keysHold.filter(k => k !== key);
-
-        log(`RELEASE: ${key}`);
         robot.keyToggle(key, "up");
+        var keyIndex = getIndex(key);
+        output.sendMessage([16, 0, keyIndex]);
         var index = getIndex(key);
-        log(`MIDI ON: ${index}`);
-        output.sendMessage([16, 127, index]);
+        keysPressed = keysPressed.filter(k => k !== key);
       }
     }
     keysIncoming = [];
 
     then = now - (delta % interval);
+
+    log(keysPressed);
   }
 }
+
 requestAnimationFrame(loop);

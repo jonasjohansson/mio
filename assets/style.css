@@ -22,13 +22,13 @@ body {
   font-size: 12px;
 }
 
-html.serial-connected header > div:first-child,
-html.midi-connected header > div:last-child {
+html.serial-connected main > div:first-child,
+html.midi-connected main > div:last-child {
   background-color: rgba(0, 255, 0, 1);
 }
 
-html:not(.serial-connected) header > div:first-child,
-html:not(.midi-connected) header > div:last-child {
+html:not(.serial-connected) main > div:first-child,
+html:not(.midi-connected) main > div:last-child {
   background-color: rgba(255, 0, 0, 1);
 }
 
@@ -46,17 +46,21 @@ label {
   text-transform: capitalize;
 }
 
+label,
 input,
 button {
   padding: 0.25rem;
-  /* border-radius: 0.25rem; */
-  border: 1px solid #444;
+}
+
+input,
+button {
+  border-radius: 0.25rem;
+  border: 1px solid #aaa;
   box-sizing: border-box;
   font-size: inherit;
 }
 
 input {
-  /* margin-left: 0.5rem; */
   display: inline-block;
   width: 2.5rem;
   width: 100%;
@@ -68,89 +72,34 @@ button {
   cursor: pointer;
 }
 
-/* box */
+/* ui */
 
-.view {
-  outline: 1px solid black;
-  box-sizing: border-box;
-  padding: 1rem;
-}
-
-.view:nth-of-type(odd) {
-  background-color: rgba(0, 0, 0, 0.15);
-}
-
-.view div div {
-  /* display: grid; */
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.view > div:last-child {
-  /* border-left: 1px dotted black; */
-}
-
-.view *:not(div) {
-  margin: 0.25rem;
-}
-
-/* header, main */
-
-header > div {
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-/* header */
-
-header {
-}
-
-header > div:last-child {
-}
-
-header > div {
-  border-bottom: 1px solid black;
-  /* background-color: yellow; */
-}
-
-header > div:nth-of-type(1) {
-  /* background-color: tomato; */
-}
-
-header > div:nth-of-type(2) {
-  /* background-color: springgreen; */
-}
-
-/* main */
-
-main {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+main > div > * {
+  width: 100%;
 }
 
 main > div {
-  /* border-bottom: 1px solid black; */
+  padding: 1rem;
+  box-sizing: border-box;
+  border-bottom: 1px solid gray;
 }
 
-main > div:nth-of-type(even) {
-  /* background-color: rgb(90, 231, 250); */
+main > div > *:not(:last-child) {
+  margin-bottom: 1rem;
 }
 
-main > div:nth-of-type(odd) {
-  /* background-color: rgb(214, 132, 38); */
+main > div > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 1rem;
 }
 
-/* footer */
-
-footer {
-  height: 100px;
-  overflow: scroll;
+#log {
+  padding: 1rem;
+  text-transform: uppercase;
 }
 
-/* buttons */
-
-#add {
+#ports {
   width: 100%;
 }
 

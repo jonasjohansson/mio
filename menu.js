@@ -73,8 +73,11 @@ const helpMenu = [
     click() {
       config.clear();
     }
-  }
+  },
+  { role: "reload" }
 ];
+
+const toolsMenu = [];
 
 const menu = [
   {
@@ -87,6 +90,10 @@ const menu = [
   {
     role: "window",
     submenu: windowMenu
+  },
+  {
+    role: "tools",
+    submenu: toolsMenu
   },
   {
     role: "help",

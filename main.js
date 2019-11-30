@@ -4,13 +4,20 @@ const electron = require("electron");
 const path = require("path");
 const url = require("url");
 const config = require("./config");
-const menu = require("./menu");
+// const menu = require("./menu");
+// const tray = require("./tray");
+
+const trayWindow = require("electron-tray-window");
 
 let win;
 let isQuitting = false;
 
 app.on("ready", () => {
-  electron.Menu.setApplicationMenu(menu);
+  // electron.Menu.setApplicationMenu(menu);
+  trayWindow.setOptions({
+    trayIconPath: "assets/icons/trayIcon.png",
+    windowUrl: `file://${__dirname}/index.html`
+  });
   createWindow();
 });
 
@@ -30,17 +37,7 @@ function createWindow() {
     title: app.getName(),
     x: lastWindowState.x,
     y: lastWindowState.y,
-    width: lastWindowState.width,
-    height: lastWindowState.height,
-    minWidth: 500,
-    minHeight: 900,
-    maxWidth: 500,
-    // titleBarStyle: 'hiddenInset',
-    // frame: false,
-    alwaysOnTop: config.get("alwaysOnTop"),
-    webPreferences: {
-      nodeIntegration: true
-    }
+    show: false
   });
 
   win.loadURL(`file://${__dirname}/index.html`);
