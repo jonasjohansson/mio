@@ -12,7 +12,6 @@ const parser = new Readline();
 const keysAllowed = config.get("keys");
 
 let port;
-
 var keysPressed = [];
 var keysIncoming = [];
 
@@ -122,23 +121,13 @@ parser.on("data", str => {
   if (!keysPressed.includes(key)) {
     keysPressed.push(key);
     robot.keyToggle(key, "down");
+    ipcRenderer.send("keyDown", key);
     output.sendMessage([16, 127, keyIndex]);
   }
   if (!keysIncoming.includes(key)) {
     keysIncoming.push(key);
   }
 });
-
-function pressKey(key, index = 0) {
-  robot.keyToggle(key, "down");
-  setTimeout(() => {
-    robot.keyToggle(key, "up");
-  }, 100);
-}
-
-function arrayContains(needle, arrhaystack) {
-  return arrhaystack.indexOf(needle) > -1;
-}
 
 function getIndex(key) {
   return keysAllowed.indexOf(key);
@@ -162,36 +151,25 @@ function log(msg, type = "") {
   log.className = type;
 }
 
-var fps = 30;
-var now;
-var then = Date.now();
-var interval = 1000 / fps;
-var delta;
+function render() {
+  requestAnimationFrame(render);
 
-function loop() {
-  requestAnimationFrame(loop);
-  now = Date.now();
-  delta = now - then;
+  for (var i = 0; i < keysPressed.length; i++) {
+    var key = keysPressed[i];
 
-  if (delta > interval) {
-    for (var i = 0; i < keysPressed.length; i++) {
-      var key = keysPressed[i];
-
-      // if the key is not incoming any more, it must have been released
-      if (!keysIncoming.includes(key)) {
-        robot.keyToggle(key, "up");
-        var keyIndex = getIndex(key);
-        output.sendMessage([16, 0, keyIndex]);
-        var index = getIndex(key);
-        keysPressed = keysPressed.filter(k => k !== key);
-      }
+    // if the key is not incoming any more, it must have been released
+    if (!keysIncoming.includes(key)) {
+      robot.keyToggle(key, "up");
+      ipcRenderer.send("keyUp");
+      var keyIndex = getIndex(key);
+      output.sendMessage([16, 0, keyIndex]);
+      var index = getIndex(key);
+      keysPressed = keysPressed.filter(k => k !== key);
     }
-    keysIncoming = [];
-
-    then = now - (delta % interval);
-
-    log(keysPressed);
   }
+  keysIncoming = [];
+
+  log(keysPressed);
 }
 
-requestAnimationFrame(loop);
+requestAnimationFrame(render);

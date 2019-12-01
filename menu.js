@@ -1,15 +1,8 @@
-"use strict";
 const electron = require("electron");
 const config = require("./config");
 const openAboutWindow = require("electron-about-window").default;
 
-const { app, BrowserWindow, shell } = electron;
-const appName = app.getName();
-
-function sendAction(action, arg = null) {
-  const win = BrowserWindow.getAllWindows()[0];
-  win.webContents.send(action, arg);
-}
+const { app, shell } = electron;
 
 const appMenu = [
   {
@@ -34,13 +27,6 @@ const appMenu = [
     accelerator: "Cmd+,",
     click() {
       config.openInEditor();
-    }
-  },
-  {
-    label: "Save",
-    accelerator: "Cmd+s",
-    click() {
-      sendAction("save");
     }
   },
   { type: "separator" },
@@ -77,11 +63,9 @@ const helpMenu = [
   { role: "reload" }
 ];
 
-const toolsMenu = [];
-
 const menu = [
   {
-    label: appName,
+    label: app.getName(),
     submenu: appMenu
   },
   // {
@@ -90,10 +74,6 @@ const menu = [
   {
     role: "window",
     submenu: windowMenu
-  },
-  {
-    role: "tools",
-    submenu: toolsMenu
   },
   {
     role: "help",

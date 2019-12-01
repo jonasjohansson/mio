@@ -1,23 +1,27 @@
 "use strict";
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, Tray, ipcMain } = require("electron");
 const electron = require("electron");
 const path = require("path");
 const url = require("url");
+const menu = require("./menu");
 const config = require("./config");
-// const menu = require("./menu");
-// const tray = require("./tray");
 
-const trayWindow = require("electron-tray-window");
+const trayIconDefault = `${__dirname}/assets/trayIcon.png`;
+const trayIconUnread = `${__dirname}/assets/trayIconUnread.png`;
 
-let win;
-let isQuitting = false;
+const width = 200;
+const height = 300;
+
+let tray, win;
 
 app.on("ready", () => {
-  // electron.Menu.setApplicationMenu(menu);
-  trayWindow.setOptions({
-    trayIconPath: "assets/icons/trayIcon.png",
-    windowUrl: `file://${__dirname}/index.html`
+  // app.dock.hide();
+  tray = new Tray(trayIconUnread);
+  tray.on("click", () => {
+    win.show();
+    win.focus();
   });
+  electron.Menu.setApplicationMenu(menu);
   createWindow();
 });
 
@@ -26,35 +30,39 @@ app.on("activate", () => {
 });
 
 app.on("before-quit", () => {
-  isQuitting = true;
   config.set("lastWindowState", win.getBounds());
 });
 
 function createWindow() {
   const lastWindowState = config.get("lastWindowState");
-
   win = new BrowserWindow({
     title: app.getName(),
     x: lastWindowState.x,
     y: lastWindowState.y,
-    show: false
+    width: lastWindowState.width,
+    height: lastWindowState.height,
+    minWidth: width,
+    maxWidth: width,
+    minHeight: height,
+    maxHeight: height,
+    // titleBarStyle: "hiddenInset",
+    // frame: false,
+    alwaysOnTop: config.get("alwaysOnTop")
   });
 
   win.loadURL(`file://${__dirname}/index.html`);
-
-  win.on("close", event => {
-    config.set("lastWindowState", win.getBounds());
-    if (!isQuitting) {
-      event.preventDefault();
-      app.hide();
-    }
-  });
 }
 
 ipcMain.on("quit", () => {
   app.quit();
 });
 
-ipcMain.on("debug", () => {
-  win.webContents.openDevTools({ mode: "detach" });
-});
+// ipcMain.on("keyUp", () => {
+//   // tray.setTitle("");
+//   tray.setImage(trayIconDefault);
+// });
+
+// ipcMain.on("keyDown", (event, key) => {
+//   // tray.setTitle(` ${key}`);
+//   tray.setImage(trayIconUnread);
+// });

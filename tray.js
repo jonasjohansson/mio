@@ -9,7 +9,7 @@ function sendAction(action, arg = null) {
 let tray = null;
 let portMenu = [];
 app.on("ready", () => {
-  tray = new Tray("assets/icons/trayIcon.png");
+  tray = new Tray("assets/trayIcon.png");
   const contextMenu = Menu.buildFromTemplate([
     {
       label: "Port",
