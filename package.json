@@ -1,8 +1,8 @@
 {
 	"name": "Mio",
 	"productName": "Mio",
-	"version": "1.1.0",
-	"description": "Minimal input output for serial communication to keyboard and MIDI",
+	"version": "1.1.4",
+	"description": "Mio is a minimal input and output application that enables serial communication to computer interaction",
 	"license": "MIT",
 	"author": {
 		"name": "Jonas Johansson",
@@ -13,11 +13,12 @@
 	"dependencies": {
 		"electron-about-window": "^1.13.2",
 		"electron-store": "^5.0.0",
-		"electron-tray-window": "^1.2.5",
 		"event-emitter-es6": "^1.1.5",
 		"midi": "^1.0.0",
+		"osc": "^2.3.1",
 		"robotjs": "^0.5.1",
-		"serialport": "^7.1.5"
+		"serialport": "^7.1.5",
+		"ws": "^7.2.0"
 	},
 	"devDependencies": {
 		"electron": "4.2.12",

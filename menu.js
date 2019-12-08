@@ -2,7 +2,7 @@ const electron = require("electron");
 const config = require("./config");
 const openAboutWindow = require("electron-about-window").default;
 
-const { app, shell } = electron;
+const { app, shell, BrowserWindow } = electron;
 
 const appMenu = [
   {
@@ -14,10 +14,7 @@ const appMenu = [
         homepage: "https://jonasjohansson.itch.io/mio",
         win_options: {
           titleBarStyle: "hidden"
-          // parent: BrowserWindow.getFocusedWindow(),
-          // modal: true,
         },
-        // show_close_button: 'Close',
         package_json_dir: __dirname
       })
   },
@@ -53,11 +50,19 @@ const helpMenu = [
     }
   },
   { type: "separator" },
-  { role: "toggledevtools" },
+  {
+    label: "Open Developer Tools",
+    click() {
+      win = BrowserWindow.getAllWindows()[0];
+      win.webContents.openDevTools({ mode: "detach" });
+    }
+  },
   {
     label: "Reset",
     click() {
       config.clear();
+      win = BrowserWindow.getAllWindows()[0];
+      win.webContents.session.clearCache(function() {});
     }
   },
   { role: "reload" }
@@ -68,9 +73,6 @@ const menu = [
     label: app.getName(),
     submenu: appMenu
   },
-  // {
-  //   role: "editMenu"
-  // },
   {
     role: "window",
     submenu: windowMenu

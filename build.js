@@ -14,7 +14,7 @@ builder
     config: {
       appId: "se.jonasjohansson.mio",
       mac: {
-        category: "public.app-category.social-networking",
+        category: "public.app-category.utilities",
         target: ["dir", "dmg", "zip"],
         hardenedRuntime: true,
         entitlements: "./build/entitlements.mac.inherit.plist",

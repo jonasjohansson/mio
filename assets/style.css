@@ -9,9 +9,9 @@
   outline: none;
 }
 
-html:not(.serial-connected) .view {
-  /* opacity: 0.5; */
-  /* pointer-events: none; */
+*[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 html,
