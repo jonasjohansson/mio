@@ -128,11 +128,6 @@ parser.on("data", str => {
   onData(str);
 });
 
-setInterval(function() {
-  var r = Math.random();
-  onData(`${r}/composition/master`);
-}, 3000);
-
 function onData(str) {
   str = str.toLowerCase();
   str = str.trim();
@@ -168,31 +163,32 @@ function onData(str) {
   }
 
   // socket logic sensor123
-  var pair = str.match(/[a-z]+|[\d]+/g);
-  if (pair.length === 2) {
-    var data = {
-      id: pair[0],
-      msg: Number(pair[1])
+  var data = str.split(/([0-9]+)/).filter(Boolean);
+  if (data.length === 2) {
+    var dataObject = {
+      id: data[0],
+      msg: Number(data[1])
     };
-    data = JSON.stringify(data);
+    dataObject = JSON.stringify(dataObject);
     wss.clients.forEach(function each(client) {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(data);
+        client.send(dataObject);
       }
     });
+    return;
   }
 
   // osc logic 123/address/
-  var pair = str.match(/(\d+(\.\d{1,2})?)+|[^\d]+/g);
-  if (pair.length === 2) {
-    var data = {
-      address: pair[1],
+  var data = str.split(/([0-9\.]+)/).filter(Boolean);
+  if (data.length === 2) {
+    var dataObject = {
+      address: data[0],
       args: new Array({
         type: "f",
-        value: Number(pair[0])
+        value: Number(data[1])
       })
     };
-    udpPort.send(data, "127.0.0.1", 7001);
+    udpPort.send(dataObject, "127.0.0.1", 7001);
   }
 }
 
@@ -257,10 +253,6 @@ function render() {
 requestAnimationFrame(render);
 
 wss.on("connection", socket => {
-  oscPort = new osc.WebSocketPort({
-    socket: socket,
-    metadata: true
-  });
   console.log("connected");
   socket.on("message", function incoming(message) {
     onData(message);

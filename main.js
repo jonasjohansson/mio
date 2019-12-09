@@ -35,7 +35,8 @@ function createWindow() {
     minWidth: 200,
     minHeight: 300,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      backgroundThrottling: false
     }
   });
 
