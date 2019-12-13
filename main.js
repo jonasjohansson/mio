@@ -32,8 +32,12 @@ function createWindow() {
     y: lastWindowState.y,
     width: lastWindowState.width,
     height: lastWindowState.height,
-    minWidth: 200,
-    minHeight: 300,
+    minWidth: 10,
+    minHeight: 10,
+    titleBarStyle: "customButtonsOnHover",
+    frame: false,
+    transparent: true,
+    opacity: 0.5,
     webPreferences: {
       nodeIntegration: true,
       backgroundThrottling: false

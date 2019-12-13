@@ -34,8 +34,21 @@ html:not(.midi-connected) main > div:last-child {
 
 body {
   font-family: var(--font-family);
-  background-color: white;
+  /* background-color: white; */
   overflow: hidden;
+}
+
+body:before {
+  content: "Mio";
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  line-height: 1rem;
+  text-align: center;
+  box-sizing: border-box;
+  background-color: black;
+  color: white;
+  -webkit-app-region: drag;
 }
 
 input {
@@ -82,6 +95,7 @@ main > div {
   padding: 1rem;
   box-sizing: border-box;
   border-bottom: 1px solid gray;
+  text-align: center;
 }
 
 main > div > *:not(:last-child) {
@@ -97,6 +111,8 @@ main > div > div {
 #log {
   padding: 1rem;
   text-transform: uppercase;
+  background-color: white;
+  color: black;
 }
 
 #ports {

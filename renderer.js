@@ -133,22 +133,37 @@ function onData(str) {
   str = str.toLowerCase();
   str = str.trim();
 
-  // key logic $up
-  if (str[0] === "$") {
+  var first = str[0];
+
+  // key logic
+  if (first === "$" || first === "!") {
     var key = str.substr(1);
     var keyIndex = getIndex(key);
 
     if (keyIndex < 0) return;
 
-    if (!keysPressed.includes(key)) {
-      keysPressed.push(key);
-      if (key === "mouse") {
-        robot.mouseToggle("down");
-      } else {
-        robot.keyToggle(key, "down");
-        output.sendMessage([16, 127, keyIndex]);
+    if (first === "$") {
+      if (!keysPressed.includes(key)) {
+        keysPressed.push(key);
+        if (key === "mouse") {
+          robot.mouseToggle("down");
+        } else {
+          robot.keyToggle(key, "down");
+          output.sendMessage([16, 127, keyIndex]);
+        }
+        log(`${key}: ↓`);
       }
-      log(`${key}: down`);
+    } else {
+      if (keysPressed.includes(key)) {
+        keysPressed = keysPressed.filter(k => k !== key);
+        if (key === "mouse") {
+          robot.mouseToggle("up");
+        } else {
+          robot.keyToggle(key, "up");
+          output.sendMessage([16, 0, keyIndex]);
+        }
+        log(`${key}: ↑`);
+      }
     }
     if (!keysIncoming.includes(key)) {
       keysIncoming.push(key);
@@ -176,6 +191,7 @@ function onData(str) {
         client.send(dataObject);
       }
     });
+    port.write(str);
     return;
   }
 
@@ -191,29 +207,6 @@ function onData(str) {
     };
     udpPort.send(dataObject, "127.0.0.1", 7001);
   }
-}
-
-function getIndex(key) {
-  return keysAllowed.indexOf(key);
-}
-
-function isArduino(port) {
-  var p = port["vendorId"];
-  return p !== undefined && p.includes("2341");
-}
-
-function removeAllChildren(node) {
-  while (node.firstChild) {
-    node.removeChild(node.firstChild);
-  }
-}
-
-function log(msg) {
-  var log = document.getElementById("log");
-  var p = document.createElement("p");
-  p.innerHTML = msg;
-  log.insertBefore(p, log.firstChild);
-  console.log(msg);
 }
 
 var now;
@@ -239,7 +232,7 @@ function render() {
           } else {
             robot.keyToggle(key, "up");
           }
-          log(`${key}: up`);
+          log(`${key}: ↑`);
           var keyIndex = getIndex(key);
           output.sendMessage([16, 0, keyIndex]);
           keysPressed = keysPressed.filter(k => k !== key);
@@ -252,6 +245,29 @@ function render() {
 }
 
 requestAnimationFrame(render);
+
+function getIndex(key) {
+  return keysAllowed.indexOf(key);
+}
+
+function isArduino(port) {
+  var p = port["vendorId"];
+  return p !== undefined && p.includes("2341");
+}
+
+function removeAllChildren(node) {
+  while (node.firstChild) {
+    node.removeChild(node.firstChild);
+  }
+}
+
+function log(msg) {
+  var log = document.getElementById("log");
+  var p = document.createElement("p");
+  p.innerHTML = msg;
+  log.insertBefore(p, log.firstChild);
+  console.log(msg);
+}
 
 wss.on("connection", socket => {
   console.log("connected");
