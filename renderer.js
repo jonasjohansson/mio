@@ -57,9 +57,10 @@ function scan() {
   var connectBtn = document.querySelector("#connect");
   removeAllChildren(portSelect);
   SerialPort.list(function(err, ports) {
-    ports = ports.filter(isArduino);
+    // ports = ports.filter(isArduino);
     connectBtn.disabled = !ports.length;
     for (var port of ports) {
+      console.log(port);
       var option = document.createElement("option");
       option.textContent = port.comName;
       if (port.comName.includes("usbmodem")) {
