@@ -9,7 +9,7 @@
   </head>
   <body>
     <main>
-      <div>
+      <div id="serial">
         <p>Serial</p>
         <div>
           <button id="scan" onclick="scan(this)">refresh</button>
@@ -18,7 +18,7 @@
         <select id="ports"></select>
         <select id="baudrates"></select>
       </div>
-      <div>
+      <div id="midi">
         <p>MIDI</p>
         <div>
           <button id="scanMidi" onclick="scanMidi(this)">refresh</button>
@@ -27,7 +27,7 @@
         <!-- <button id="test" onclick="testMidi()">test</button> -->
         <select id="devices"></select>
       </div>
+      <div id="log"></div>
     </main>
-    <div id="log"></div>
   </body>
 </html>

@@ -1,52 +1,49 @@
-"use strict";
+'use strict';
 
-const { app, BrowserWindow, ipcMain } = require("electron");
-const electron = require("electron");
-const menu = require("./menu");
-const config = require("./config");
+const { app, BrowserWindow, ipcMain } = require('electron');
+const electron = require('electron');
+const menu = require('./menu');
+const config = require('./config');
 
 let win;
 
-app.on("ready", () => {
+app.on('ready', () => {
   electron.Menu.setApplicationMenu(menu);
   createWindow();
 });
 
-app.on("window-all-closed", () => {
+app.on('window-all-closed', () => {
   app.quit();
 });
 
-app.on("activate", () => {
+app.on('activate', () => {
   win.show();
 });
 
-app.on("before-quit", () => {
-  config.set("lastWindowState", win.getBounds());
+app.on('before-quit', () => {
+  config.set('lastWindowState', win.getBounds());
 });
 
 function createWindow() {
-  const lastWindowState = config.get("lastWindowState");
+  const lastWindowState = config.get('lastWindowState');
   win = new BrowserWindow({
     title: app.getName(),
     x: lastWindowState.x,
     y: lastWindowState.y,
-    width: lastWindowState.width,
-    height: lastWindowState.height,
-    minWidth: 10,
-    minHeight: 10,
-    titleBarStyle: "customButtonsOnHover",
+    width: 200,
+    height: 304,
+    titleBarStyle: 'customButtonsOnHover',
     frame: false,
+    resizeable: false,
     transparent: true,
-    opacity: 0.5,
     webPreferences: {
-      nodeIntegration: true,
-      backgroundThrottling: false
+      nodeIntegration: true
     }
   });
 
   win.loadURL(`file://${__dirname}/index.html`);
 }
 
-ipcMain.on("quit", () => {
+ipcMain.on('quit', () => {
   app.quit();
 });
