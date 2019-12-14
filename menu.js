@@ -2,7 +2,9 @@ const electron = require("electron");
 const config = require("./config");
 const openAboutWindow = require("electron-about-window").default;
 
-const { app, shell, BrowserWindow } = electron;
+const { app, shell, mainWindow, BrowserWindow } = electron;
+
+let win;
 
 const appMenu = [
   {
@@ -24,6 +26,19 @@ const appMenu = [
     accelerator: "Cmd+,",
     click() {
       config.openInEditor();
+    }
+  },
+  {
+    label: "Ghost",
+    accelerator: "Cmd+G",
+    type: "checkbox",
+    checked: false,
+    click: function(item, BrowserWindow) {
+      if (item.checked) {
+        BrowserWindow.setOpacity(0);
+      } else {
+        BrowserWindow.setOpacity(1);
+      }
     }
   },
   { type: "separator" },
