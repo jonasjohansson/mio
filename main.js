@@ -10,6 +10,8 @@ let win;
 const width = 200;
 const height = 304;
 
+app.disableHardwareAcceleration();
+
 app.on("ready", () => {
   electron.Menu.setApplicationMenu(menu);
   createWindow();
@@ -46,6 +48,12 @@ function createWindow() {
       nodeIntegration: true
     }
   });
+
+  app.dock.hide();
+  win.setAlwaysOnTop(true, "floating");
+  win.setVisibleOnAllWorkspaces(true);
+  win.setFullScreenable(false);
+  app.dock.show();
 
   win.loadURL(`file://${__dirname}/index.html`);
 }

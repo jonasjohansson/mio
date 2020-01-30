@@ -13,15 +13,17 @@ const parser = new Readline();
 const keysAllowed = config.get("keys");
 
 const remoteServer = config.get("remoteServer");
-const wss =
-  remoteServer === ""
-    ? new WebSocket.Server({ port: config.get("port") || 8080 })
-    : new WebSocket(`wss://${remoteServer}`);
+const wss = remoteServer === "" ? new WebSocket.Server({ port: config.get("port") || 8080 }) : new WebSocket(`wss://${remoteServer}`);
 
 var port;
 var oscPort;
 var keysPressed = [];
 var keysIncoming = [];
+
+var now;
+var then = Date.now();
+var interval = config.get("interval");
+var delta;
 
 var udpPort = new osc.UDPPort({
   localAddress: "0.0.0.0",
@@ -32,7 +34,7 @@ var udpPort = new osc.UDPPort({
 });
 udpPort.open();
 
-let portSelect, baudSelect, devicesSelect;
+let portSelect, baudSelect, devicesSelect, intervalInput;
 
 var portOpen = false;
 var midiOpen = false;
@@ -41,6 +43,15 @@ document.addEventListener("DOMContentLoaded", () => {
   portSelect = document.querySelector("#ports");
   baudSelect = document.querySelector("#baudrates");
   devicesSelect = document.querySelector("#devices");
+  intervalInput = document.querySelector("#interval");
+
+  intervalInput.value = interval;
+
+  /* Get interval rate */
+  intervalInput.addEventListener("change", function() {
+    interval = Number(intervalInput.value);
+    config.set("interval", interval);
+  });
 
   /* Get baudrates */
   for (const baudrate of config.get("baudrates")) {
@@ -145,23 +156,15 @@ function onData(str) {
     if (first === "$") {
       if (!keysPressed.includes(key)) {
         keysPressed.push(key);
-        if (key === "mouse") {
-          robot.mouseToggle("down");
-        } else {
-          robot.keyToggle(key, "down");
-          output.sendMessage([16, 127, keyIndex]);
-        }
+        robot.keyToggle(key, "down");
+        output.sendMessage([16, 127, keyIndex]);
         log(`${key}: ↓`);
       }
     } else {
       if (keysPressed.includes(key)) {
         keysPressed = keysPressed.filter(k => k !== key);
-        if (key === "mouse") {
-          robot.mouseToggle("up");
-        } else {
-          robot.keyToggle(key, "up");
-          output.sendMessage([16, 0, keyIndex]);
-        }
+        robot.keyToggle(key, "up");
+        output.sendMessage([16, 0, keyIndex]);
         log(`${key}: ↑`);
       }
     }
@@ -171,11 +174,37 @@ function onData(str) {
     return;
   }
 
-  // mouse logic 100,200
-  var pos = str.split(",");
-  if (pos.length === 2) {
-    robot.moveMouse(Number(pos[0]), Number(pos[1]));
-    return;
+  // mouse logic
+  for (let mouseEvent of ["movemousesmooth", "movemouse", "mouseclick", "mousetoggle", "dragmouse", "scrollmouse"]) {
+    if (str.includes(mouseEvent)) {
+      str = str.replace(mouseEvent, "");
+      str = str.replace(/\(|\)/g, "");
+      var val = str.split(",");
+      if (val.length === 2) {
+        let a = Number(val[0]);
+        let b = Number(val[1]);
+        switch (mouseEvent) {
+          case "movemousesmooth":
+            robot.moveMouseSmooth(a, b);
+            break;
+          case "movemouse":
+            robot.moveMouse(a, b);
+            break;
+          case "mouseclick":
+            robot.mouseClick(val[0], val[0]);
+            break;
+          case "mousetoggle":
+            robot.mouseToggle(val[0], val[0]);
+            break;
+          case "dragmouse":
+            robot.dragMouse(a, b);
+            break;
+          case "scrollmouse":
+            robot.scrollMouse(a, b);
+            break;
+        }
+      }
+    }
   }
 
   // socket logic sensor123
@@ -208,11 +237,6 @@ function onData(str) {
     udpPort.send(dataObject, "127.0.0.1", 7001);
   }
 }
-
-var now;
-var then = Date.now();
-var interval = 100;
-var delta;
 
 function render() {
   requestAnimationFrame(render);
