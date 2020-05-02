@@ -1,6 +1,6 @@
-const electron = require("electron");
-const config = require("./config");
-const openAboutWindow = require("electron-about-window").default;
+const electron = require('electron');
+const config = require('./config');
+const openAboutWindow = require('electron-about-window').default;
 
 const { app, shell, mainWindow, BrowserWindow } = electron;
 
@@ -8,30 +8,30 @@ let win;
 
 const appMenu = [
   {
-    label: "About Mio",
+    label: 'About Mio',
     click: () =>
       openAboutWindow({
         icon_path: `${__dirname}/assets/icon.png`,
         copyright: `Copyright (c) ${new Date().getFullYear()} Jonas Johansson`,
-        homepage: "https://jonasjohansson.itch.io/mio",
+        homepage: 'https://jonasjohansson.itch.io/mio',
         win_options: {
-          titleBarStyle: "hidden"
+          titleBarStyle: 'hidden'
         },
         package_json_dir: __dirname
       })
   },
-  { type: "separator" },
+  { type: 'separator' },
   {
-    label: "Preferences…",
-    accelerator: "Cmd+,",
+    label: 'Preferences…',
+    accelerator: 'Cmd+,',
     click() {
       config.openInEditor();
     }
   },
   {
-    label: "Ghost",
-    accelerator: "Cmd+G",
-    type: "checkbox",
+    label: 'Ghost',
+    accelerator: 'Cmd+G',
+    type: 'checkbox',
     checked: false,
     click: function(item, BrowserWindow) {
       if (item.checked) {
@@ -41,59 +41,59 @@ const appMenu = [
       }
     }
   },
-  { type: "separator" },
-  { role: "hide" },
-  { role: "hideothers" },
-  { role: "unhide" },
-  { type: "separator" },
-  { role: "quit" }
+  { type: 'separator' },
+  { role: 'hide' },
+  { role: 'hideothers' },
+  { role: 'unhide' },
+  { type: 'separator' },
+  { role: 'quit' }
 ];
 
-const windowMenu = [{ role: "minimize" }, { role: "close" }];
+const windowMenu = [{ role: 'minimize' }, { role: 'close' }];
 
 const helpMenu = [
   {
-    label: "Website",
+    label: 'Website',
     click() {
-      shell.openExternal("https://jonasjohansson.se");
+      shell.openExternal('https://jonasjohansson.se');
     }
   },
   {
-    label: "Source Code",
+    label: 'Source Code',
     click() {
-      shell.openExternal("https://github.com/jonasjohansson/mio");
+      shell.openExternal('https://github.com/jonasjohansson/mio');
     }
   },
-  { type: "separator" },
+  { type: 'separator' },
   {
-    label: "Open Developer Tools",
+    label: 'Open Developer Tools',
     click() {
       win = BrowserWindow.getAllWindows()[0];
-      win.webContents.openDevTools({ mode: "detach" });
+      win.webContents.openDevTools({ mode: 'detach' });
     }
   },
   {
-    label: "Reset",
+    label: 'Reset',
     click() {
       config.clear();
       win = BrowserWindow.getAllWindows()[0];
       win.webContents.session.clearCache(function() {});
     }
   },
-  { role: "reload" }
+  { role: 'reload' }
 ];
 
 const menu = [
   {
-    label: app.getName(),
+    label: app.name,
     submenu: appMenu
   },
   {
-    role: "window",
+    role: 'window',
     submenu: windowMenu
   },
   {
-    role: "help",
+    role: 'help',
     submenu: helpMenu
   }
 ];
