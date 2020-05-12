@@ -33,7 +33,7 @@ const appMenu = [
     accelerator: 'Cmd+G',
     type: 'checkbox',
     checked: false,
-    click: function(item, BrowserWindow) {
+    click: function (item, BrowserWindow) {
       if (item.checked) {
         BrowserWindow.setOpacity(0);
       } else {
@@ -77,7 +77,7 @@ const helpMenu = [
     click() {
       config.clear();
       win = BrowserWindow.getAllWindows()[0];
-      win.webContents.session.clearCache(function() {});
+      win.webContents.session.clearCache(function () {});
     }
   },
   { role: 'reload' }

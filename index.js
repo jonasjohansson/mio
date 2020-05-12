@@ -12,7 +12,7 @@ const height = 304;
 
 app.disableHardwareAcceleration();
 
-app.allowRendererProcessReuse = true;
+// app.allowRendererProcessReuse = true;
 
 app.on('ready', () => {
   electron.Menu.setApplicationMenu(menu);
