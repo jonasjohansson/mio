@@ -1,42 +1,44 @@
 {
-  "name": "mio",
-  "productName": "Mio",
-  "version": "1.0.11",
-  "description": "Mio is a minimal input and output application that enables serial communication to computer interaction",
-  "license": "MIT",
-  "author": {
-    "name": "Jonas Johansson",
-    "email": "jns.johansson@gmail.com",
-    "url": "https://jonasjohansson.se"
-  },
-  "main": "index.js",
-  "dependencies": {
-    "electron-about-window": "^1.13.2",
-    "electron-store": "^5.1.1",
-    "event-emitter-es6": "^1.1.5",
-    "midi": "^1.0.0",
-    "osc": "^2.4.1",
-    "promise-worker": "^2.0.1",
-    "robotjs": "^0.6.0",
-    "serialport": "^8.0.7",
-    "ws": "^7.2.5"
-  },
-  "devDependencies": {
-    "electron": "^8.2.5",
-    "electron-builder": "^22.6.0",
-    "electron-notarize": "0.3.0",
-    "node-abi": "^2.16.0"
-  },
-  "scripts": {
-    "dist": "electron-builder"
-  },
-  "build": {
-    "appId": "se.jonasjohansson.mio",
-    "mac": {
-      "category": "public.app-category.utilities"
+    "name": "mio",
+    "productName": "Mio",
+    "version": "1.0.11",
+    "description": "Mio is a minimal input and output application that enables serial communication to computer interaction",
+    "license": "MIT",
+    "author": {
+        "name": "Jonas Johansson",
+        "email": "jns.johansson@gmail.com",
+        "url": "https://jonasjohansson.se"
     },
-    "dmg": {
-      "title": "Mio"
+    "main": "index.js",
+    "dependencies": {
+        "electron-about-window": "^1.13.4",
+        "electron-store": "^6.0.0",
+        "event-emitter-es6": "^1.1.5",
+        "midi": "^1.0.0",
+        "osc": "^2.4.1",
+        "promise-worker": "^2.0.1",
+        "robotjs": "^0.6.0",
+        "serialport": "^9.0.0",
+        "ws": "^7.3.1"
+    },
+    "devDependencies": {
+        "electron": "^8.4.0",
+        "electron-builder": "^22.7.0",
+        "electron-notarize": "1.0.0",
+        "electron-rebuild": "^1.11.0",
+        "node-abi": "^2.18.0"
+    },
+    "scripts": {
+        "dist": "electron-builder",
+        "postinstall": "electron-builder install-app-deps"
+    },
+    "build": {
+        "appId": "se.jonasjohansson.mio",
+        "mac": {
+            "category": "public.app-category.utilities"
+        },
+        "dmg": {
+            "title": "Mio"
+        }
     }
-  }
 }

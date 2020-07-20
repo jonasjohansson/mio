@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width" />
-    <link href="./assets/style.css" rel="stylesheet" />
-    <script src="./renderer.js"></script>
-  </head>
-  <body>
-    <main>
-      <div id="serial">
-        <p>Serial</p>
-        <div>
-          <button id="scan" onclick="scan(this)">refresh</button>
-          <button id="connect" onclick="connect(this)">connect</button>
-        </div>
-        <select id="ports"></select>
-        <select id="baudrates"></select>
-        <input id="interval" type="number" min="10" max="100" value="100" />
-      </div>
-      <div id="midi">
-        <p>MIDI</p>
-        <div>
-          <button id="scanMidi" onclick="scanMidi(this)">refresh</button>
-          <button id="connectMidi" onclick="connectMidi(this)">connect</button>
-        </div>
-        <!-- <button id="test" onclick="testMidi()">test</button> -->
-        <select id="devices"></select>
-      </div>
-      <div id="log"></div>
-    </main>
-  </body>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width" />
+        <link href="./assets/style.css" rel="stylesheet" />
+        <script src="./renderer.js"></script>
+    </head>
+    <body>
+        <main>
+            <div id="serial">
+                <p>Serial</p>
+                <div>
+                    <button id="scan" onclick="scan(this)">refresh</button>
+                    <button id="connect" onclick="connect(this)">connect</button>
+                </div>
+                <select id="ports"></select>
+                <select id="baudrates"></select>
+                <input id="interval" type="number" min="10" max="100" value="100" />
+            </div>
+            <div id="midi">
+                <p>MIDI</p>
+                <div>
+                    <button id="scanMidi" onclick="scanMidi(this)">refresh</button>
+                    <button id="connectMidi" onclick="connectMidi(this)">connect</button>
+                </div>
+                <!-- <button id="test" onclick="testMidi()">test</button> -->
+                <select id="devices"></select>
+            </div>
+            <div id="log"></div>
+        </main>
+    </body>
 </html>
