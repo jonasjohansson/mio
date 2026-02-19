@@ -1,0 +1,37 @@
+# Mio Configuration
+# Copy this file to mio.toml (same directory) or ~/.config/mio/mio.toml
+
+[serial]
+baud_rate = 9600
+auto_connect = false
+
+[protocol]
+# Watchdog interval in milliseconds. Keys held via key:down that aren't
+# refreshed within this interval will be auto-released. Prevents stuck keys.
+watchdog_interval_ms = 100
+
+[keyboard]
+enabled = true
+
+[mouse]
+enabled = true
+
+[midi]
+enabled = true
+auto_connect = false
+
+[websocket]
+enabled = true
+port = 8080
+host = "0.0.0.0"
+
+[osc]
+enabled = true
+local_address = "0.0.0.0"
+local_port = 7000
+remote_address = "127.0.0.1"
+remote_port = 7001
+
+[tui]
+show_timestamps = true
+max_log_lines = 1000

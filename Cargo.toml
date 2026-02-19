@@ -1,0 +1,54 @@
+[package]
+name = "mio-bridge"
+version = "2.0.0"
+edition = "2021"
+description = "Serial-to-everything bridge: keyboard, mouse, MIDI, WebSocket, OSC"
+license = "MIT"
+authors = ["Jonas Johansson <jns.johansson@gmail.com>"]
+
+[[bin]]
+name = "mio"
+path = "src/main.rs"
+
+[dependencies]
+# Serial communication
+serialport = "4.8"
+
+# OS-level keyboard and mouse simulation
+enigo = "0.6"
+
+# MIDI output
+midir = "0.10"
+
+# OSC encoding/decoding
+rosc = "0.11"
+
+# Async runtime (only the features we actually use)
+tokio = { version = "1", features = ["rt-multi-thread", "net", "sync", "macros"] }
+
+# WebSocket server
+tokio-tungstenite = "0.28"
+
+# Terminal UI
+ratatui = "0.30"
+crossterm = "0.29"
+
+# CLI argument parsing
+clap = { version = "4", features = ["derive"] }
+
+# Config file
+serde = { version = "1", features = ["derive"] }
+toml = "1"
+
+# Error handling
+anyhow = "1"
+
+# Config file paths
+dirs = "6"
+
+# Async stream utilities
+futures-util = "0.3"
+
+# Local time (already a transitive dep, just expose it)
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
